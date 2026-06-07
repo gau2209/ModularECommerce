@@ -1,0 +1,40 @@
+﻿using API.Constants;
+using Serilog.Context;
+
+namespace API.Middlewares
+{
+    public sealed class CorrelationIdMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public CorrelationIdMiddleware (RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task InvokeAsync (HttpContext context)
+        {
+            var correlationId = GetOrCreateCorrelationId(context);
+
+            context.Response.Headers[CorrelationIdConstants.HeaderName] = correlationId;
+
+            using ( LogContext.PushProperty("CorrelationId", correlationId) )
+            {
+                await _next(context);
+            }
+        }
+
+        private static string GetOrCreateCorrelationId (HttpContext context)
+        {
+            if ( context.Request.Headers.TryGetValue(
+                    CorrelationIdConstants.HeaderName,
+                    out var correlationId)
+                && !string.IsNullOrWhiteSpace(correlationId) )
+            {
+                return correlationId.ToString( );
+            }
+
+            return Guid.NewGuid( ).ToString("N");
+        }
+    }
+}

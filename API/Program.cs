@@ -2,6 +2,8 @@
 using API.Middlewares;
 using Application;
 using Infrastructure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Scalar.AspNetCore;
 using Serilog;
@@ -35,6 +37,12 @@ namespace API
             builder.Services.AddInfrastructure(builder.Configuration);
 
             var app = builder.Build();
+            app.UseMiddleware<CorrelationIdMiddleware>( );
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.MessageTemplate =
+                    "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+            });
             app.UseMiddleware<GlobalExceptionMiddleware>( );
 
             // Configure the HTTP request pipeline.
@@ -56,13 +64,15 @@ namespace API
 
             app.MapControllers();
 
-            app.MapGet("/api/health", (ILogger<Program> logger) =>
+            app.MapGet("/api/health", async (AppDbContext db) =>
             {
+                var count = await db.Categories.CountAsync( );
 
                 return Results.Ok(new
                 {
                     status = "Healthy",
                     service = "ModularCommerce.Api",
+                    count = count,
                     timestamp = DateTime.Now
                 });
             });

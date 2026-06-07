@@ -4,7 +4,7 @@ services:
     container_name: modularcommerce-sqlserver
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "Your_password123"
+      SA_PASSWORD: "AnhTuanabc_2209"
     ports:
       - "1433:1433"
     volumes:
