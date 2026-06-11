@@ -2,10 +2,11 @@
 {
     public sealed class RegisterRequest
     {
-        public string UserName { get; init; } = default!;
-        public string Email { get; init; } = default!;
-        public string Password { get; init; } = default!;
-        public string FullName { get; init; } = default!;
-        public string? PhoneNumber { get; init; }
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string? Phone { get; set; } = string.Empty;
+        public string RoleName { get; set; } = "Customer";
     }
 }

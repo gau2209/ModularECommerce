@@ -55,7 +55,7 @@ namespace API.Middlewares
 
             var response = new ErrorResponse
             {
-                TraceId = context.TraceIdentifier,
+                TraceID = context.TraceIdentifier,
                 StatusCode = context.Response.StatusCode,
                 Message = ex.Message,
                 Errors = null

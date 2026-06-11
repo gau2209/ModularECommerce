@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence.Services;
 
 namespace Persistence
 {
@@ -13,6 +15,8 @@ namespace Persistence
             {
                 op.UseSqlServer(connectionString);
             });
+
+            services.AddScoped<IAuthService, AuthService>( );
 
             return services;
         }

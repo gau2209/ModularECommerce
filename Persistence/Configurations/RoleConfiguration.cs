@@ -43,7 +43,7 @@ namespace Persistence.Configurations
 
             builder.HasMany(x => x.UserRoles)
                 .WithOne(x => x.Role)
-                .HasForeignKey(x => x.RoleId)
+                .HasForeignKey(x => x.RoleID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(x => x.RolePermissions)

@@ -2,9 +2,17 @@
 {
     public sealed class TokenResponse
     {
-        public string AccessToken { get; init; } = default!;
-        public string RefreshToken { get; init; } = default!;
-        public DateTime AccessTokenExpiresAt { get; init; }
-        public DateTime RefreshTokenExpiresAt { get; init; }
+        public string AccessToken { get; set; } = string.Empty;
+        public string RefreshToken { get; set; } = string.Empty;
+
+        public DateTime AccessTokenExpiresAt { get; set; }
+        public DateTime RefreshTokenExpiresAt { get; set; }
+
+        public Guid UserID { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+
+        public List<string> Roles { get; set; } = [];
+        public List<string> Permissions { get; set; } = [];
     }
 }

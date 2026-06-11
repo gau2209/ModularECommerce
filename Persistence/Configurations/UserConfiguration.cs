@@ -57,12 +57,12 @@ namespace Persistence.Configurations
 
             builder.HasMany(x => x.UserRoles)
                 .WithOne(x => x.User)
-                .HasForeignKey(x => x.UserId)
+                .HasForeignKey(x => x.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(x => x.RefreshTokens)
                 .WithOne(x => x.User)
-                .HasForeignKey(x => x.UserId)
+                .HasForeignKey(x => x.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

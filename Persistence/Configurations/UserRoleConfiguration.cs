@@ -10,16 +10,16 @@ namespace Persistence.Configurations
         {
             builder.ToTable("UserRoles");
 
-            builder.HasKey(x => new { x.UserId, x.RoleId });
+            builder.HasKey(x => new { x.UserID, x.RoleID });
 
             builder.HasOne(x => x.User)
                 .WithMany(x => x.UserRoles)
-                .HasForeignKey(x => x.UserId)
+                .HasForeignKey(x => x.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(x => x.Role)
                 .WithMany(x => x.UserRoles)
-                .HasForeignKey(x => x.RoleId)
+                .HasForeignKey(x => x.RoleID)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

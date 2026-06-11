@@ -2,6 +2,6 @@
 {
     public sealed class RefreshTokenRequest
     {
-        public string RefreshToken { get; init; } = default!;
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }

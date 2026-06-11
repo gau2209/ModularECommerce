@@ -50,11 +50,11 @@ namespace Persistence.Configurations
             builder.HasIndex(x => x.Token)
                 .IsUnique( );
 
-            builder.HasIndex(x => x.UserId);
+            builder.HasIndex(x => x.UserID);
 
             builder.HasOne(x => x.User)
                 .WithMany(x => x.RefreshTokens)
-                .HasForeignKey(x => x.UserId)
+                .HasForeignKey(x => x.UserID)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

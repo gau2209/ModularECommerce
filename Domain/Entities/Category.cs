@@ -7,7 +7,7 @@ namespace Domain.Entities
         public string Name { get; private set; } = default!;
         public string Slug { get; private set; } = default!;
         public string? Description { get; private set; }
-        public Guid? ParentId { get; private set; }
+        public Guid? ParentID { get; private set; }
         public bool IsActive { get; private set; } = true;
         public Category? Parent { get; private set; }
         public ICollection<Category> Children { get; private set; } = new List<Category>( );
@@ -21,7 +21,7 @@ namespace Domain.Entities
             Name = name;
             Slug = slug;
             Description = description;
-            ParentId = parentId;
+            ParentID = parentId;
             IsActive = true;
             CreatedAt = DateTime.UtcNow;
         }
@@ -31,7 +31,7 @@ namespace Domain.Entities
             Name = name;
             Slug = slug;
             Description = description;
-            ParentId = parentId;
+            ParentID = parentId;
             UpdatedAt = DateTime.UtcNow;
         }
 

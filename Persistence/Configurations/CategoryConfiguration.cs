@@ -46,7 +46,7 @@ namespace Persistence.Configurations
 
             builder.HasOne(x => x.Parent)
                 .WithMany(x => x.Children)
-                .HasForeignKey(x => x.ParentId)
+                .HasForeignKey(x => x.ParentID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

@@ -6,7 +6,7 @@ namespace Domain.Entities
     {
         public string Email { get; private set; } = default!;
         public string UserName { get; private set; } = default!;
-        public string PasswordHash { get; private set; } = default!;
+        public string PasswordHash { get; set; } = default!;
         public string FullName { get; private set; } = default!;
         public string? PhoneNumber { get; private set; }
         public bool IsActive { get; private set; } = true;
@@ -30,32 +30,32 @@ namespace Domain.Entities
             FullName = fullName;
             PhoneNumber = phoneNumber;
             IsActive = true;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.Now;
         }
 
         public void UpdateProfile (string fullName, string? phoneNumber)
         {
             FullName = fullName;
             PhoneNumber = phoneNumber;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
         }
 
         public void ChangePassword (string passwordHash)
         {
             PasswordHash = passwordHash;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
         }
 
         public void Activate ()
         {
             IsActive = true;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
         }
 
         public void Deactivate ()
         {
             IsActive = false;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
         }
     }
 }

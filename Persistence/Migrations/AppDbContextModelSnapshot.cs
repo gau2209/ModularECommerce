@@ -55,7 +55,7 @@ namespace Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<Guid?>("ParentId")
+                    b.Property<Guid?>("ParentID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Slug")
@@ -73,7 +73,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("Name");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("ParentID");
 
                     b.HasIndex("Slug")
                         .IsUnique();
@@ -378,7 +378,7 @@ namespace Persistence.Migrations
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ID");
@@ -386,7 +386,7 @@ namespace Persistence.Migrations
                     b.HasIndex("Token")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserID");
 
                     b.ToTable("RefreshTokens", (string)null);
                 });
@@ -768,15 +768,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.UserRole", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UserID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid>("RoleID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.HasKey("UserID", "RoleID");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleID");
 
                     b.ToTable("UserRoles", (string)null);
                 });
@@ -785,7 +785,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Category", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId")
+                        .HasForeignKey("ParentID")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Parent");
@@ -795,7 +795,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("RefreshTokens")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -825,13 +825,13 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Role", "Role")
                         .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("RoleID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "User")
                         .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

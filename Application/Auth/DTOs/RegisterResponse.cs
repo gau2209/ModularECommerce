@@ -2,10 +2,10 @@
 {
     public sealed class RegisterResponse
     {
-        public Guid UserID { get; init; }
-        public string UserName { get; init; } = default!;
-        public string Email { get; init; } = default!;
-        public string FullName { get; init; } = default!;
+        public Guid UserID { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string FullName { get; init; } = string.Empty;
     }
 }
     

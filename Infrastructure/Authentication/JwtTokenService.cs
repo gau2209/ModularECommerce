@@ -56,6 +56,11 @@ namespace Infrastructure.Authentication
 
             return new TokenResponse
             {
+                UserID = userID,
+                Email = email,
+                UserName = userName,
+                Roles = roles.ToList(),
+                Permissions = permissions.ToList(),
                 AccessToken = accessToken,
                 RefreshToken = CreateRefreshToken(),
                 AccessTokenExpiresAt = accessTokenExpiresAt,
