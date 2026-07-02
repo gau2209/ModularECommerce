@@ -10,6 +10,8 @@ namespace Persistence
     {
         public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration config)
         {
+            services.AddScoped<ICategoryService, CategoryService>( );
+
             var connectionString = config.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(op =>
             {
