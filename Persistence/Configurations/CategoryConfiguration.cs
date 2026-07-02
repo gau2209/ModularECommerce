@@ -40,7 +40,8 @@ namespace Persistence.Configurations
             builder.Property(x => x.UpdatedAt);
 
             builder.HasIndex(x => x.Slug)
-                .IsUnique( );
+                .IsUnique( )
+                .HasFilter("[Slug] IS NOT NULL AND [IsDeleted] = 0");
 
             builder.HasIndex(x => x.Name);
 

@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using System.Text.Json;
 
 namespace Domain.Entities
 {
@@ -23,28 +24,52 @@ namespace Domain.Entities
             Description = description;
             ParentID = parentId;
             IsActive = true;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.Now;
+            CreatedBy = "SYSTEM";
+            IsDeleted = false;
         }
 
-        public void Update (string name, string slug, string? description, Guid? parentId)
+        public Category (string name, string slug, Guid? parentId = null)
+        {
+            Name = name;
+            Slug = slug;
+            ParentID = parentId;
+            CreatedAt = DateTime.Now;
+            CreatedBy = "SYSTEM";
+            IsActive = true;
+            IsDeleted = false;
+        }
+
+        public void Update (string name, string slug, string? description, Guid? parentId,bool isActive)
         {
             Name = name;
             Slug = slug;
             Description = description;
             ParentID = parentId;
-            UpdatedAt = DateTime.UtcNow;
+            IsActive = isActive;
+            UpdatedAt = DateTime.Now;
+            UpdatedBy = "System2";
         }
 
         public void Activate ()
         {
             IsActive = true;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
+            UpdatedBy = "System2";
         }
 
         public void Deactivate ()
         {
             IsActive = false;
-            UpdatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.Now;
+            UpdatedBy = "System2";
+        }
+
+        public void Delete ()
+        {
+            IsDeleted = true;
+            UpdatedAt = DateTime.Now;
+            UpdatedBy = "System2";
         }
     }
 }
