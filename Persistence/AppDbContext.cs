@@ -15,6 +15,7 @@ namespace Persistence
         }
 
         public DbSet<Category> Categories => Set<Category>( );
+        public DbSet<Product> Products { get; set; }
 
         public DbSet<User> Users => Set<User>( );
         public DbSet<Role> Roles => Set<Role>( );
