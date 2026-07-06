@@ -17,6 +17,15 @@ namespace API.Controllers
             _productService = productService;
         }
 
+        [HttpGet("search")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchProducts ([FromQuery] ProductSearchRequest request)
+        {
+            var result = await _productService.SearchAsync(request);
+
+            return Ok(result);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetProducts ()

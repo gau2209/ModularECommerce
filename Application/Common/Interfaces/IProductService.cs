@@ -1,4 +1,5 @@
-﻿using Application.Products.DTOs;
+﻿using Application.Common.Models;
+using Application.Products.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,6 @@ namespace Application.Common.Interfaces
         Task<bool> DeleteAsync (Guid id);
         Task<bool> ActivateAsync (Guid id);
         Task<bool> DeactivateAsync (Guid id);
+        Task<PagedResult<ProductDto>> SearchAsync (ProductSearchRequest request);
     }
 }

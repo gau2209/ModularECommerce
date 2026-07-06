@@ -1,7 +1,11 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.Products.DTOs;
+using Dapper;
 using Domain.Entities;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +17,13 @@ namespace Persistence.Services
     public class ProductService : IProductService
     {
         private readonly AppDbContext _context;
+        private readonly string _connectionString;
 
-        public ProductService (AppDbContext context)
+        public ProductService (AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _connectionString = configuration.GetConnectionString("DefaultConnection") 
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         }
 
         public async Task<List<ProductDto>> GetPublicProductsAsync ()
@@ -151,6 +158,36 @@ namespace Persistence.Services
             await _context.SaveChangesAsync( );
 
             return true;
+        }
+
+        public async Task<PagedResult<ProductDto>> SearchAsync (ProductSearchRequest request)
+        {
+            var pageNumber = request.PageNumber <= 0 ? 1 : request.PageNumber;
+            var pageSize = request.PageSize <= 0 ? 10 : request.PageSize;
+
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+               await sqlConnection.OpenAsync( );
+
+                var param = new DynamicParameters( );
+                param.Add("@Name", request?.Keyword);
+                param.Add("@IsActive", request?.IsActive);
+                    
+                var Query = await sqlConnection.QueryAsync<Product>("Product_Get",param,commandType: System.Data.CommandType.StoredProcedure,commandTimeout:240);
+
+                if(Query == null || !Query.Any())
+                    return new PagedResult<ProductDto>();
+
+                var QuerytoDTO = Query.Select(x=> ToDto(x)).ToList();
+                var totalCount = QuerytoDTO.Count;
+                return new PagedResult<ProductDto>
+                {
+                    Items = QuerytoDTO.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList(),
+                    PageNumber = pageNumber,
+                    PageSize = pageSize,
+                    TotalCount = totalCount,
+                };
+            }
         }
 
         #region Helper
