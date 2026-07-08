@@ -162,8 +162,6 @@ namespace Persistence.Services
 
         public async Task<PagedResult<ProductDto>> SearchAsync (ProductSearchRequest request)
         {
-            var pageNumber = request.PageNumber <= 0 ? 1 : request.PageNumber;
-            var pageSize = request.PageSize <= 0 ? 10 : request.PageSize;
 
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -172,20 +170,34 @@ namespace Persistence.Services
                 var param = new DynamicParameters( );
                 param.Add("@Name", request?.Keyword);
                 param.Add("@IsActive", request?.IsActive);
-                    
-                var Query = await sqlConnection.QueryAsync<Product>("Product_Get",param,commandType: System.Data.CommandType.StoredProcedure,commandTimeout:240);
+                param.Add("@PageSize", request?.PageSize);
+                param.Add("@PageNumber", request?.PageNumber);
 
-                if(Query == null || !Query.Any())
+                var rows = await sqlConnection.QueryAsync<ProductSearchDTO>("Product_Get", param, commandType: System.Data.CommandType.StoredProcedure, commandTimeout: 240);
+
+                if( rows == null || !rows.Any())
                     return new PagedResult<ProductDto>();
 
-                var QuerytoDTO = Query.Select(x=> ToDto(x)).ToList();
-                var totalCount = QuerytoDTO.Count;
+                var items = rows.Select(x => new ProductDto
+                {
+                    ID = x.ID,
+                    Name = x.Name,
+                    Slug = x.Slug,
+                    SKU = x.SKU,
+                    Description = x.Description,
+                    Price = x.Price,
+                    CategoryID = x.CategoryID,
+                    CategoryName = x.CategoryName,
+                    IsActive = x.IsActive
+                }).ToList( );
+
+
                 return new PagedResult<ProductDto>
                 {
-                    Items = QuerytoDTO.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList(),
-                    PageNumber = pageNumber,
-                    PageSize = pageSize,
-                    TotalCount = totalCount,
+                    Items = items,
+                    PageNumber = request!.PageNumber,
+                    PageSize = request.PageSize,
+                    TotalCount = rows.FirstOrDefault()?.TotalCount ?? 0,
                 };
             }
         }
