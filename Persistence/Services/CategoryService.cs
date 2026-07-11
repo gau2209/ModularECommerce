@@ -1,4 +1,5 @@
 ﻿using Application.Categories.DTOs;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -90,19 +91,19 @@ namespace Persistence.Services
                     .AnyAsync(x => !x.IsDeleted && x.Slug == slug && x.ID != ID);
 
                 if ( slugExists )
-                    throw new InvalidOperationException("Category slug already exists.");
+                    throw new ConflictException("Category slug already exists.");
             }
 
             if ( request.ParentID.HasValue )
             {
                 if ( request.ParentID.Value == ID )
-                    throw new InvalidOperationException("Category cannot be its own parent.");
+                    throw new BadRequestException("Category cannot be its own parent.");
 
                 var parentExists = await _context.Categories
                     .AnyAsync(x => x.ID == request.ParentID.Value && !x.IsDeleted);
 
                 if ( !parentExists )
-                    throw new InvalidOperationException("Parent category does not exist.");
+                    throw new BadRequestException("Parent category does not exist.");
             }
 
             category.Update(name, slug, string.Empty, request.ParentID, request.IsActive);

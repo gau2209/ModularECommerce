@@ -19,8 +19,4 @@ namespace Application.Products.DTOs
         public bool IsActive { get; set; }
     }
 
-    public class ProductSearchDTO : ProductDto
-    {
-        public int TotalCount { get; set; }
-    }
 }

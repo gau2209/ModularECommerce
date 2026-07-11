@@ -38,6 +38,7 @@ namespace API.Middlewares
                 BusinessRuleException => HttpStatusCode.BadRequest,
                 ConflictException => HttpStatusCode.Conflict,
                 UnauthorizedAccessException => HttpStatusCode.Unauthorized,
+                ArgumentException => HttpStatusCode.BadRequest,
                 _ => HttpStatusCode.InternalServerError
             };
 

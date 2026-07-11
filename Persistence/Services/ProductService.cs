@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Products.DTOs;
 using Dapper;
@@ -172,32 +173,20 @@ namespace Persistence.Services
                 param.Add("@IsActive", request?.IsActive);
                 param.Add("@PageSize", request?.PageSize);
                 param.Add("@PageNumber", request?.PageNumber);
+                param.Add("@TotalCount", dbType:System.Data.DbType.Int32,direction:System.Data.ParameterDirection.Output);
 
-                var rows = await sqlConnection.QueryAsync<ProductSearchDTO>("Product_Get", param, commandType: System.Data.CommandType.StoredProcedure, commandTimeout: 240);
+                var rows = await sqlConnection.QueryAsync<Product>("Product_Get", param, commandType: System.Data.CommandType.StoredProcedure, commandTimeout: 240);
+                var totalCount = param.Get<int>("@TotalCount");
 
                 if( rows == null || !rows.Any())
                     return new PagedResult<ProductDto>();
 
-                var items = rows.Select(x => new ProductDto
-                {
-                    ID = x.ID,
-                    Name = x.Name,
-                    Slug = x.Slug,
-                    SKU = x.SKU,
-                    Description = x.Description,
-                    Price = x.Price,
-                    CategoryID = x.CategoryID,
-                    CategoryName = x.CategoryName,
-                    IsActive = x.IsActive
-                }).ToList( );
-
-
                 return new PagedResult<ProductDto>
                 {
-                    Items = items,
+                    Items = rows.Select(x =>ToDto(x)).ToList(),
                     PageNumber = request!.PageNumber,
                     PageSize = request.PageSize,
-                    TotalCount = rows.FirstOrDefault()?.TotalCount ?? 0,
+                    TotalCount = totalCount,
                 };
             }
         }
@@ -210,7 +199,7 @@ namespace Persistence.Services
                 .AnyAsync(x => x.ID == categoryID && !x.IsDeleted && x.IsActive);
 
             if ( !exists )
-                throw new InvalidOperationException("Category does not exist or is inactive.");
+                throw new BadRequestException("Category does not exist or is inactive.");
         }
 
         private async Task ValidateSlugUniqueAsync (string slug, Guid? currentProductID = null)
@@ -222,7 +211,7 @@ namespace Persistence.Services
                     ( !currentProductID.HasValue || x.ID != currentProductID.Value ));
 
             if ( exists )
-                throw new InvalidOperationException("Product slug already exists.");
+                throw new ConflictException("Product slug already exists.");
         }
 
         private async Task ValidateSkuUniqueAsync (string sku, Guid? currentProductID = null)
@@ -234,7 +223,7 @@ namespace Persistence.Services
                     ( !currentProductID.HasValue || x.ID != currentProductID.Value ));
 
             if ( exists )
-                throw new InvalidOperationException("Product SKU already exists.");
+                throw new ConflictException("Product SKU already exists.");
         }
         private static ProductDto ToDto (Product product)
         {
